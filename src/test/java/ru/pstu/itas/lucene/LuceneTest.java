@@ -5,6 +5,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 
 import org.apache.lucene.index.CorruptIndexException;
@@ -20,14 +23,14 @@ public class LuceneTest {
 
 	private LuceneFrontend lucene;
 	private File indexDir;
-	private File documentFile;
+	private Path documentFilePath;
 
 	@Before
-	public void init() throws IOException {
+	public void init() throws IOException, URISyntaxException {
 		indexDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "lucene");
 		lucene = new LuceneFrontend(indexDir);
-		documentFile = new File("src/test/resources/" + FULL_NAME);
-		lucene.index(documentFile);
+		documentFilePath = Paths.get("src/test/resources/" + FULL_NAME);
+		lucene.index(documentFilePath);
 	}
 
 	@After
@@ -53,7 +56,7 @@ public class LuceneTest {
 
 	@Test
 	public void removeFromIndex() throws CorruptIndexException, IOException, ParseException {
-		lucene.removeFromIndex(documentFile.getName());
+		lucene.removeFromIndex(documentFilePath.getFileName().toString());
 		assertTrue(lucene.search("Winnie-the-Pooh").isEmpty());
 	}
 }

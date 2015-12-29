@@ -2,6 +2,7 @@ package ru.pstu.itas.lucene;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,25 +21,22 @@ public final class LuceneFrontend {
 		this.indexDir = indexDir;
 	}
 
-	public Set<IdentName> search(String contentPart, int resultSize)
-			throws IOException, ParseException {
+	public Set<IdentName> search(String contentPart, int resultSize) throws IOException, ParseException {
 		Set<IdentName> result = new HashSet<IdentName>();
 		for (IndexItem item : searcher().findByContent(contentPart, resultSize))
 			result.add(new IdentName(item.getTitle()));
 		return result;
 	}
 
-	public Set<IdentName> search(String contentPart) throws IOException,
-			ParseException {
+	public Set<IdentName> search(String contentPart) throws IOException, ParseException {
 		return search(contentPart, DEFAULT_RESULT_SIZE);
 	}
 
-	public void index(File file) throws IOException {
-		indexer().indexFile(file);
+	public void index(Path filePath) throws IOException {
+		indexer().indexFile(filePath);
 	}
 
-	public void removeFromIndex(String fileName) throws CorruptIndexException,
-			IOException {
+	public void removeFromIndex(String fileName) throws CorruptIndexException, IOException {
 		indexer().removeFromIndex(fileName);
 	}
 
