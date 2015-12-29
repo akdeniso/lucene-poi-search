@@ -21,22 +21,19 @@ final class Searcher {
 	private final QueryParser contentQueryParser;
 
 	Searcher(File indexDir) throws IOException {
-		searcher = new IndexSearcher(IndexReader.open(FSDirectory
-				.open(indexDir)));
+		searcher = new IndexSearcher(IndexReader.open(FSDirectory.open(indexDir)));
 		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-		contentQueryParser = new QueryParser(Version.LUCENE_36,
-				IndexItem.CONTENT, analyzer);
+		contentQueryParser = new QueryParser(Version.LUCENE_36, IndexItem.CONTENT, analyzer);
 	}
 
-	List<IndexItem> findByContent(String queryString, int numOfResults)
-			throws ParseException, IOException {
+	List<IndexItem> findByContent(String queryString, int numOfResults) throws ParseException, IOException {
 		Query query = contentQueryParser.parse(queryString);
 		ScoreDoc[] queryResults = searcher.search(query, numOfResults).scoreDocs;
 		List<IndexItem> results = new ArrayList<>();
 		for (ScoreDoc scoreDoc : queryResults) {
 			Document doc = searcher.doc(scoreDoc.doc);
-			results.add(new IndexItem(Long.parseLong(doc.get(IndexItem.ID)),
-					doc.get(IndexItem.TITLE), doc.get(IndexItem.CONTENT)));
+			results.add(new IndexItem(Long.parseLong(doc.get(IndexItem.ID)), doc.get(IndexItem.TITLE),
+					doc.get(IndexItem.CONTENT)));
 		}
 
 		return results;

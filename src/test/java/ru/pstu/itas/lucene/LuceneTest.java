@@ -35,7 +35,6 @@ public class LuceneTest {
 
 	@After
 	public void clear() throws IOException {
-		lucene.close();
 		indexDir.delete();
 	}
 

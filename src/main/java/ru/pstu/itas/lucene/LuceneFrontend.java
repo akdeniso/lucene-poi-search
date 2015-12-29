@@ -14,17 +14,16 @@ public final class LuceneFrontend {
 
 	private final File indexDir;
 
-	private Indexer indexer;
-	private Searcher searcher;
-
 	public LuceneFrontend(File indexDir) {
 		this.indexDir = indexDir;
 	}
 
 	public Set<IdentName> search(String contentPart, int resultSize) throws IOException, ParseException {
 		Set<IdentName> result = new HashSet<IdentName>();
-		for (IndexItem item : searcher().findByContent(contentPart, resultSize))
+		Searcher search = new Searcher(indexDir);
+		for (IndexItem item : search.findByContent(contentPart, resultSize))
 			result.add(new IdentName(item.getTitle()));
+		search.close();
 		return result;
 	}
 
@@ -33,29 +32,14 @@ public final class LuceneFrontend {
 	}
 
 	public void index(Path filePath) throws IOException {
-		indexer().indexFile(filePath);
+		Indexer index = new Indexer(indexDir);
+		index.indexFile(filePath);
+		index.close();
 	}
 
 	public void removeFromIndex(String fileName) throws CorruptIndexException, IOException {
-		indexer().removeFromIndex(fileName);
-	}
-
-	public void close() throws IOException {
-		if (indexer != null)
-			indexer.close();
-		if (searcher != null)
-			searcher.close();
-	}
-
-	private Searcher searcher() throws IOException {
-		if (searcher == null)
-			searcher = new Searcher(indexDir);
-		return searcher;
-	}
-
-	private Indexer indexer() throws IOException {
-		if (indexer == null)
-			indexer = new Indexer(indexDir);
-		return indexer;
+		Indexer index = new Indexer(indexDir);
+		index.removeFromIndex(fileName);
+		index.close();
 	}
 }
