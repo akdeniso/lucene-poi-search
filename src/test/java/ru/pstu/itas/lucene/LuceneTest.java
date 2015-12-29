@@ -16,8 +16,7 @@ import org.junit.Test;
 public class LuceneTest {
 	private static final String IDENT = "qwerty1";
 	private static final String NAME = "Test.docx";
-	private static final String FULL_NAME = IDENT
-			+ IdentName.IDENT_NAME_SEPARATOR + NAME;
+	private static final String FULL_NAME = IDENT + IdentName.IDENT_NAME_SEPARATOR + NAME;
 
 	private LuceneFrontend lucene;
 	private File indexDir;
@@ -25,8 +24,7 @@ public class LuceneTest {
 
 	@Before
 	public void init() throws IOException {
-		indexDir = new File(System.getProperty("java.io.tmpdir")
-				+ File.pathSeparator + "lucene");
+		indexDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "lucene");
 		lucene = new LuceneFrontend(indexDir);
 		documentFile = new File("src/test/resources/" + FULL_NAME);
 		lucene.index(documentFile);
@@ -54,8 +52,7 @@ public class LuceneTest {
 	}
 
 	@Test
-	public void removeFromIndex() throws CorruptIndexException, IOException,
-			ParseException {
+	public void removeFromIndex() throws CorruptIndexException, IOException, ParseException {
 		lucene.removeFromIndex(documentFile.getName());
 		assertTrue(lucene.search("Winnie-the-Pooh").isEmpty());
 	}
